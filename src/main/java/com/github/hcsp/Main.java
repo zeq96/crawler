@@ -35,15 +35,8 @@ public class Main {
                 continue;
             }
             Document document = httpGetAndParseHtml(link);
-            ArrayList<Element> elements = document.select("a");
-            elements.stream().map(aTag -> aTag.attr("href")).filter(elementLink -> isNewsPage(elementLink) && !isLoginPage(elementLink)).forEach(originLinkPool::add);
-            for (Element aTag : elements) {
-                String elementLink = aTag.attr("href");
-                if (!isNewsPage(elementLink) || isLoginPage(elementLink)) {
-                    continue;
-                }
-                originLinkPool.add(elementLink);
-            }
+            ArrayList<Element> links = document.select("a");
+            links.stream().map(aTag -> aTag.attr("href")).filter(elementLink -> isNewsPage(elementLink) && !isLoginPage(elementLink)).forEach(originLinkPool::add);
 
             insertDbIfItsNewsPage(document);
             processedLinkPool.add(link);
