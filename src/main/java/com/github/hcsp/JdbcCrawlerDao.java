@@ -4,7 +4,7 @@ import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 import java.sql.*;
 
-public class DataAccessObject implements CrawlerDao {
+public class JdbcCrawlerDao implements CrawlerDao {
     private static final String H2_CONNECTION = "jdbc:h2:file:C:\\WorkSpace\\HCSP\\Thread\\crawler\\news";
     private static final String H2_USERNAME = "root";
     private static final String H2_PASSWORD = "root";
@@ -12,7 +12,7 @@ public class DataAccessObject implements CrawlerDao {
     private final Connection connection;
 
     @SuppressFBWarnings("DMI_CONSTANT_DB_PASSWORD")
-    public DataAccessObject() {
+    public JdbcCrawlerDao() {
         try {
             this.connection = DriverManager.getConnection(H2_CONNECTION, H2_USERNAME, H2_PASSWORD);
         } catch (SQLException e) {
@@ -33,7 +33,7 @@ public class DataAccessObject implements CrawlerDao {
         return null;
     }
 
-    public void updateLink2Db(String link, String sql) throws SQLException {
+    private void updateLink2Db(String link, String sql) throws SQLException {
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             statement.setString(1, link);
             statement.executeUpdate();
@@ -60,5 +60,15 @@ public class DataAccessObject implements CrawlerDao {
                 resultSet.close();
             }
         }
+    }
+
+    @Override
+    public void insertProcessedLink(String link) {
+
+    }
+
+    @Override
+    public void insertLinkToBeProcessed(String elementLink) {
+
     }
 }
