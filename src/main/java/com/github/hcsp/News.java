@@ -1,15 +1,31 @@
 package com.github.hcsp;
 
+import java.time.Instant;
+
 public class News {
     private Integer id;
     private String title;
     private String content;
     private String url;
+    private Instant createdAt;
+    private Instant modifiedAt;
+
+    public News() {
+    }
 
     public News(String title, String content, String url) {
         this.title = title;
         this.content = content;
         this.url = url;
+    }
+
+    public News(News original) {
+        this.id = original.id;
+        this.title = original.title;
+        this.content = original.content;
+        this.url = original.url;
+        this.createdAt = original.createdAt;
+        this.modifiedAt = original.modifiedAt;
     }
 
     public Integer getId() {
@@ -42,5 +58,33 @@ public class News {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public Instant getCreatedAt() {
+        return Instant.ofEpochSecond(createdAt.getEpochSecond());
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Instant getModifiedAt() {
+        return Instant.ofEpochSecond(modifiedAt.getEpochSecond());
+    }
+
+    public void setModifiedAt(Instant modifiedAt) {
+        this.modifiedAt = modifiedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "News{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", url='" + url + '\'' +
+                ", createdAt=" + createdAt +
+                ", modifiedAt=" + modifiedAt +
+                '}';
     }
 }

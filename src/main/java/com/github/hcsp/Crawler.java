@@ -16,35 +16,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class Crawler {
-    CrawlerDao dao = new MyBatisCrawlerDao();
+public class Crawler extends Thread {
+    CrawlerDao dao;
 
-    public static void main(String[] args) throws IOException, SQLException {
-        new Crawler().run();
+    public Crawler(CrawlerDao dao) {
+        this.dao = dao;
     }
 
-    public void run() throws SQLException, IOException {
-        String link;
-        while ((link = dao.getNextLinkThenDelete()) != null) {
-            // 已经处理过的不进行处理
-            if (dao.isLinkProcessed(link)) {
-                continue;
+    public void run() {
+        try {
+            String link;
+            while ((link = dao.getNextLinkThenDelete()) != null) {
+                // 已经处理过的不进行处理
+                if (dao.isLinkProcessed(link)) {
+                    continue;
+                }
+                // 只关心news.sina.cn , 并且过滤登录页面
+                if (isInterestedLink(link)) {
+                    System.out.println(link);
+                    Document document = httpGetAndParseHtml(link);
+
+                    parseUrlsFromPageAndStoreIntoDb(document);
+
+                    insertDbIfItsNewsPage(document, link);
+
+                    dao.insertProcessedLink(link);
+                }
             }
-            // 只关心news.sina.cn , 并且过滤登录页面
-            if (isInterestedLink(link)) {
-                System.out.println(link);
-                Document document = httpGetAndParseHtml(link);
-
-                parseUrlsFromPageAndStoreIntoDb(document);
-
-                insertDbIfItsNewsPage(document, link);
-
-                dao.insertProcessedLink(link);
-            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
-    private void parseUrlsFromPageAndStoreIntoDb(Document document) throws SQLException {
+    private void parseUrlsFromPageAndStoreIntoDb(Document document) {
         ArrayList<Element> links = document.select("a");
 
         for (Element aTag : links) {
@@ -68,8 +72,6 @@ public class Crawler {
                 // 入库
                 dao.insertNews2Db(title, content, link);
             }
-
-
         }
     }
 

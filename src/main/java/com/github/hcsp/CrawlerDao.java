@@ -2,7 +2,7 @@ package com.github.hcsp;
 
 import java.sql.SQLException;
 
-public interface CrawlerDao {
+public interface CrawlerDao extends Cloneable {
     String getNextLinkThenDelete() throws SQLException;
 
     void insertNews2Db(String title, String content, String link) throws SQLException;
@@ -12,4 +12,5 @@ public interface CrawlerDao {
     void insertProcessedLink(String link);
 
     void insertLinkToBeProcessed(String link);
+
 }

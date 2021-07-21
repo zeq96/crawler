@@ -71,4 +71,5 @@ public class JdbcCrawlerDao implements CrawlerDao {
     public void insertLinkToBeProcessed(String elementLink) {
 
     }
+
 }
