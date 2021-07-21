@@ -1,5 +1,7 @@
 package com.github.hcsp;
 
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
+
 import java.time.Instant;
 
 public class News {
@@ -64,6 +66,7 @@ public class News {
         return Instant.ofEpochSecond(createdAt.getEpochSecond());
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
     }
@@ -72,6 +75,7 @@ public class News {
         return Instant.ofEpochSecond(modifiedAt.getEpochSecond());
     }
 
+    @SuppressFBWarnings("EI_EXPOSE_REP2")
     public void setModifiedAt(Instant modifiedAt) {
         this.modifiedAt = modifiedAt;
     }
